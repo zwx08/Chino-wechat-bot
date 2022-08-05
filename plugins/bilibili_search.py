@@ -62,7 +62,7 @@ def main(l):
             send_art(data['name'],wxid,data['cover'],data['title'],f"https://live.bilibili.com/{data['roomid']}")
 
         else:
-            msg_=yaml.dump(data, sort_keys=False, default_flow_style=False)
+            msg_=yaml.dump(data, sort_keys=False, default_flow_style=False,allow_unicode=True)
             send_msg(wxid,msg_)
     #elif req["code"]==-400:
     #    return "请求错误(-400)"

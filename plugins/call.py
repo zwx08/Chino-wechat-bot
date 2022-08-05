@@ -1,3 +1,6 @@
+
+import yaml
+from action_plugins import config
 from action_sql import an_replace, plugins_sql, qu_key
 from another_action_base import wxid_form_cr
 from file_action import data_read
@@ -6,21 +9,18 @@ import ujson
 
 class call: #称呼
     
-    def data_name_write(name_write,name_write_call):
-        data=data_read()
-        with open('wx_data.json', 'w', encoding='utf-8') as file:
-            data["wx_name"][name_write]=name_write_call
-            data_json=ujson.dumps(data, ensure_ascii=False, indent=4)
-            file.write(data_json)
-            file.close()
+    def data_name_write(name_write,name_write_call): 
+        conf=config.read("call")
+        conf[name_write]=name_write_call
+        config.write_yaml("call",conf)
+
 
     def _a_ (l,an):
         wxid=l["wxid"]
         wxid_group=l["wxid_group"]
         
         if an.find('_a_') != -1 :
-            data=data_read()
-            wx_name=data["wx_name"]
+            wx_name=config.read("call")
             if wxid_group:
                 wxid=wxid_group
 
@@ -45,7 +45,7 @@ class call: #称呼
         qu=l["qu"]
         qu_data=qu.splitlines()
         #get_chatroom_details_all(wxid)
-        if qu_data[1][:3] == "wxid":
+        if qu_data[1][:5] == "wxid_":
            wxid=qu_data[1] 
         else:
             wxid=wxid_form_cr(wxid,qu_data[1])
@@ -55,8 +55,8 @@ class call: #称呼
 
 
     def read_name_all(l):
-        data=data_read()
-        data_json=ujson.dumps(data["wx_name"], ensure_ascii=False, indent=4)
+        data=config.read("call")
+        data_json=yaml.dump(data, sort_keys=False, default_flow_style=False,allow_unicode=True)
         return data_json
     
 
@@ -65,3 +65,5 @@ if __name__ =="__main__":
     qu_key.admin.write("call","&call",1,'{plugin}.call.name_write',1,"称呼写入")
     qu_key.write("read_name_all","&c_all",0,"{plugin}.call.read_name_all",1,"所有称呼读取")
     an_replace.write("call","_a_",1,"{plugin}.call._a_",1,"称呼替换")
+    config.first("call","""#wxid_: 称呼
+wxid_2eokvnwm9a5a22: 主人""")

@@ -10,3 +10,4 @@ __pycache__/
 plugins/__pycache__/*
 wx/
 .vscode/
+wx.db
