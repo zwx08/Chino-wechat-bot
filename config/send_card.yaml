@@ -1,0 +1,70 @@
+chatroom: #群聊
+# xxx@chatroom:
+#  - xxx
+
+ 19055248888@chatroom: 
+  - lcs_chat
+  - lc_chat
+  - lcs_02
+  - lc_02
+  - lc_02
+  - lc2
+
+ 21280719179@chatroom:
+  - lcs_study
+  - lc_study
+  - lcs_03
+  - lc_03
+  - lc_3
+  - lc2
+
+wxid_: #好友
+# wxid_xxx:
+#  - xxx
+
+ wxid_2eokvnwm9a5a22:
+  - john
+  - zwx
+  - 树懒
+  - 主人
+
+ wxid_3412raihkd6w22: 
+  - 老王
+  - 王叔叔
+  - lw
+  - wyx
+
+ wxid_nwwcpocf4ylv22:
+  - 晓坦
+  - LXT
+  - lxt
+
+ wxid_q6a1fcmn1yd412:
+  - cbb
+  - 蔡蔡
+  - 稼奇姐姐
+
+ wxid_u3ow88fmzh3122:
+  - cx
+  - 莫傻逼
+  - 莫超级大傻逼
+  - 急了
+
+ wxid_c8c419yvngw512:
+  - yyf
+  - 应
+  - 乐
+
+ wxid_fkoh5y2lxov522:
+  - yyf
+  - 应
+  - 乐
+
+ wxid_o98w7z8zlft012:
+  - yzy
+  - qg
+  - 倾歌
+
+gh_: #公众号
+# gh_xxx:
+#  - xxx

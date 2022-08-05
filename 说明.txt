@@ -1,0 +1,13 @@
+请运行http_server.py或者flask_wx_server.py
+注意两者中的对于answer方法的调用所使用的多线程是有问题的，无法成功调用，已在努力实现
+
+answer--主要调用
+--------answer_another
+---action及more_action--发送消息接口
+---http_server.py或flask_wx_server.py--接受消息接口
+---another_action--提供扩展方法
+---------another_action_base--基础调用
+---answerAPI--提供对于微信对话开放平台的调用
+-file_action--提供对数据文件的读取及写入
+---------wx_data.json--存有wxid及其他
+---------config.ymal--存有接口地址等内容

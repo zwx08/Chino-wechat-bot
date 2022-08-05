@@ -1,0 +1,12 @@
+*.log
+!*.py
+log/
+cache/
+sign.json
+*.db
+*.code-workspace
+*.png
+__pycache__/
+plugins/__pycache__/*
+wx/
+.vscode/

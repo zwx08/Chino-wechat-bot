@@ -1,0 +1,9 @@
+connect:
+  rece_address: 127.0.0.1
+  sent_address: 127.0.0.1
+  rece_port: 12345
+  sent_port: 12590
+answerAPI:
+  TOKEN: ''
+  managerid: ''
+robotname: 智乃
