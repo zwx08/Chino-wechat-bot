@@ -1,6 +1,4 @@
 import os
-
-import yaml
 from action_sql import plugins_sql, qu_key
 from another_action_base import nickname, wxid_form_cr
 from file_action import data_read, data_write_data
@@ -57,15 +55,11 @@ class warn: #警告
     def w_all(l):
         wxid=l["wxid"]
         data=data_read()
-        try:
-            data_json=yaml.dump(data["wx_warn"][wxid], sort_keys=False, default_flow_style=False,allow_unicode=True)
-        except KeyError:
-            data_json= "无"
+        data_json=ujson.dumps(data["wx_warn"][wxid], ensure_ascii=False, indent=4)
         return data_json
-    def w_all_all(l):
+    def w_all_all():
         data=data_read()
-        data_json=yaml.dump(data["wx_warn"], sort_keys=False, default_flow_style=False,allow_unicode=True)
-        #data_json=ujson.dumps(data["wx_warn"], ensure_ascii=False, indent=4)
+        data_json=ujson.dumps(data["wx_warn"], ensure_ascii=False, indent=4)
         return data_json
     def w_del(l):
         qu=l["qu"]

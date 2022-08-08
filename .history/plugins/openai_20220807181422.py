@@ -18,8 +18,8 @@ if TOKEN==None:
     printerr("TOKEN is None (openai)")
 if managerid==None:
     printerr("managerid is None (openai)")
-if conf["sign"] ==None:
-    conf["sign"] = dict()
+
+conf["sign"] = dict()
 
 #API_signature
 

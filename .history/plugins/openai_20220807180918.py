@@ -18,8 +18,8 @@ if TOKEN==None:
     printerr("TOKEN is None (openai)")
 if managerid==None:
     printerr("managerid is None (openai)")
-if conf["sign"] ==None:
-    conf["sign"] = dict()
+
+
 
 #API_signature
 
@@ -77,7 +77,7 @@ def API_answer(qu,userid):
     #    sign_json = file.read()
     #    sign=ujson.loads(sign_json)
     
-    if userid not in conf["sign"] :
+    if conf["sign"]==None or userid not in conf["sign"] :
         API_signature(userid)
         answer = API_an(userid,qu)
     else:

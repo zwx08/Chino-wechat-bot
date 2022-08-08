@@ -60,9 +60,9 @@ class warn: #警告
         try:
             data_json=yaml.dump(data["wx_warn"][wxid], sort_keys=False, default_flow_style=False,allow_unicode=True)
         except KeyError:
-            data_json= "无"
+            data_json=None
         return data_json
-    def w_all_all(l):
+    def w_all_all():
         data=data_read()
         data_json=yaml.dump(data["wx_warn"], sort_keys=False, default_flow_style=False,allow_unicode=True)
         #data_json=ujson.dumps(data["wx_warn"], ensure_ascii=False, indent=4)

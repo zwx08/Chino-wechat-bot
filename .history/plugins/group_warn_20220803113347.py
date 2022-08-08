@@ -1,6 +1,4 @@
 import os
-
-import yaml
 from action_sql import plugins_sql, qu_key
 from another_action_base import nickname, wxid_form_cr
 from file_action import data_read, data_write_data
@@ -45,27 +43,19 @@ class warn: #警告
             wxi=sender
         time=warn.data_warn_write(wxid,wxi,int(t))
         #name=_a_ ("_a_",qu_data[1],qu_data[1],port)
-        try:
-            nick=nickname(wxi)
-        except:
-            nick=wxi
         if 	len(qu_data) == 3:
-            return f"警告:{nick}-{wxi}({wxid}:{time}/16)\n原因:{qu_data[2]}"
+            return f"警告:{nickname(wxi)}-{wxi}({wxid}:{time}/16)\n原因:{qu_data[2]}"
         else:
-            return f"警告:{nick}-{wxi}({wxid}:{time}/16)"
+            return f"警告:{nickname(wxi)}-{wxi}({wxid}:{time}/16)"
 
     def w_all(l):
         wxid=l["wxid"]
         data=data_read()
-        try:
-            data_json=yaml.dump(data["wx_warn"][wxid], sort_keys=False, default_flow_style=False,allow_unicode=True)
-        except KeyError:
-            data_json= "无"
+        data_json=ujson.dumps(data["wx_warn"][wxid], ensure_ascii=False, indent=4)
         return data_json
-    def w_all_all(l):
+    def w_all_all():
         data=data_read()
-        data_json=yaml.dump(data["wx_warn"], sort_keys=False, default_flow_style=False,allow_unicode=True)
-        #data_json=ujson.dumps(data["wx_warn"], ensure_ascii=False, indent=4)
+        data_json=ujson.dumps(data["wx_warn"], ensure_ascii=False, indent=4)
         return data_json
     def w_del(l):
         qu=l["qu"]

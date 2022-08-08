@@ -12,4 +12,3 @@ plugins/__pycache__/*
 wx/
 .vscode/
 wx.db
-config/

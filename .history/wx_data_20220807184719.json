@@ -6,8 +6,7 @@
         "wxid_q6a1fcmn1yd412",
         "wxid_c8c419yvngw512",
         "wxid_fkoh5y2lxov522",
-        "wxid_3pqio6xh27ib22",
-        "wxid_u3ow88fmzh3122"
+        "wxid_3pqio6xh27ib22"
     ],
     "wxid_block": [],
     "wxid_white": [],
@@ -23,7 +22,7 @@
         "wxid_9qsc5ffs0d0n22": "橙子哥哥",
         "wxid_bpgeu26vu24e22": "雨泽弟弟",
         "wxid_ha0il0nrc6pn22": "一航儿子",
-        "wxid_tljkzp5zodz022": "久栋姐姐",
+        "wxid_tljkzp5zodz022": "久栋哥哥",
         "wxid_s8lmd9fxk1l622": "浮笙姐姐",
         "wxid_y4vpirx56msr22": "夏姐姐",
         "wxid_h3ze629k48dv22": "yamanaiお姉さん",
@@ -36,7 +35,8 @@
         "wxid_yhtxflj6jebz22": "宅姐姐"
     },
     "wx_warn": {
-        "20615147640@chatroom": {
+        "21280719179@chatroom": {
+            "wxid_\/昵称\/微信号\/群昵称": 1,
             "wxid_2eokvnwm9a5a22": 0
         }
     },

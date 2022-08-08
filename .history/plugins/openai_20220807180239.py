@@ -18,8 +18,7 @@ if TOKEN==None:
     printerr("TOKEN is None (openai)")
 if managerid==None:
     printerr("managerid is None (openai)")
-if conf["sign"] ==None:
-    conf["sign"] = dict()
+
 
 #API_signature
 
@@ -76,11 +75,11 @@ def API_answer(qu,userid):
     #with open('sign.json', 'r', encoding='utf-8') as file:
     #    sign_json = file.read()
     #    sign=ujson.loads(sign_json)
-    
-    if userid not in conf["sign"] :
-        API_signature(userid)
+
+    if userid in conf["sign"]:
         answer = API_an(userid,qu)
     else:
+        API_signature(userid)
         answer = API_an(userid,qu)
     return answer
 
@@ -127,5 +126,4 @@ if __name__=="__main__":
     access.write("openai","{plugin}.main",0,"微信开放平台调用")
     config.first("openai","""answerAPI:
   TOKEN:
-  managerid:
-sign:""")
+  managerid:""")
