@@ -13,3 +13,4 @@ wx/
 .vscode/
 wx.db
 config/
+.history/
