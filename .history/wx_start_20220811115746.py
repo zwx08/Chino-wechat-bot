@@ -25,6 +25,16 @@ def success():
     with open("status_wx_start","w") as file:
         file.write("success")
 
+
+def QR_code():
+    req=get_QR_code()
+    qrcode_=Image.open(BytesIO(req.content))
+    fileName="wechat_QRcode"+'.'+qrcode_.format.lower()
+    cache=os.path.join(os.getcwd(),"cache",fileName)
+    with open(cache,'wb') as f:
+        f.write(req.content)
+    qrcode.main(cache)
+    return cache
 @with_goto
 def logging():
     name=os.name
@@ -35,7 +45,7 @@ def logging():
         sleep(5)
         printinf("请手动执行登录，登录成功后输入任意字符")
         if check_wxchat_logging() == 0:
-            qrcode_cache=qrcode.QR_code()
+            qrcode_cache=QR_code()
             
             printinf(f"二维码位于:{qrcode_cache}")
             

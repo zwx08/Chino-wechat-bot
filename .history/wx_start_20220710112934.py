@@ -7,9 +7,8 @@ from more_action import *
 from goto import with_goto,goto,label
 
 from standard_print import printerr, printinf
-from io import BytesIO
-from PIL import Image
-import qrcode
+
+
 def pre_posix():
     fd = sys.stdin.fileno()# 获取标准输入的描述符
     old_ttyinfo = termios.tcgetattr(fd)# 获取标准输入(终端)的设置
@@ -24,7 +23,7 @@ def pre_posix():
 def success():
     with open("status_wx_start","w") as file:
         file.write("success")
-
+        
 @with_goto
 def logging():
     name=os.name
@@ -34,11 +33,8 @@ def logging():
         subprocess.Popen(["wine","./wx/wxdriver_cli.exe"])
         sleep(5)
         printinf("请手动执行登录，登录成功后输入任意字符")
-        if check_wxchat_logging() == 0:
-            qrcode_cache=qrcode.QR_code()
-            
-            printinf(f"二维码位于:{qrcode_cache}")
-            
+        #if check_wxchat_logging() == 0:
+        #    QR_code()
         label .pre_posix
         pre_posix()
         check=json.loads(check_wxchat_logging())
