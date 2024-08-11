@@ -1,23 +1,26 @@
-#!/usr/bin/python
 #qu_key：way：0= qu==keyword ，1=qu.find(keyword)
 from inspect import getframeinfo, stack
-import os,ujson
+import logging
+import os
+import ujson
 import sqlite3 as sqlite
-import sys
+
+
 
 def sql():
-    con = None
-    con = sqlite.connect('wx.db',check_same_thread=False)
-    #printinf("wx数据库打开成功")
+    wx_db_file=os.path.join(os.path.dirname(__file__),"wx.db")
+    con = sqlite.connect(wx_db_file,check_same_thread=False)
+    logging.debug("SQL connect")
     return con
-def dict_factory(cursor, row):  
-    d = {}  
-    for idx, col in enumerate(cursor.description):  
-        d[col[0]] = row[idx]  
-    return d  
+def dict_factory(cursor, row):
+    d = {}
+    for idx, col in enumerate(cursor.description):
+        d[col[0]] = row[idx]
+    return d
 
 class base():
-    def check_sql(con=sql()):
+    @classmethod
+    def check_sql(cls,con=sql()):
         with con:
             c = con.cursor()
             c.execute('''CREATE TABLE IF NOT EXISTS plugins(
@@ -25,7 +28,7 @@ class base():
             VERISON               TEXT            ,
             AUTHOR                TEXT            ,
             Explain               TEXT            ,
-            Enabled               TEXT            ,
+            Enabled               BLOB            ,
             filename              TEXT            )''')
 
             c.execute('''CREATE TABLE IF NOT EXISTS qu_key(
@@ -35,7 +38,7 @@ class base():
             answer                TEXT            ,
             an_way                TEXT            ,
             Explain               TEXT            ,
-            Enabled               TEXT            ,
+            Enabled               BLOB            ,
             filename              TEXT            ,
             help                  TEXT            )''')
 
@@ -46,10 +49,10 @@ class base():
             answer                TEXT            ,
             an_way                TEXT            ,
             Explain               TEXT            ,
-            Enabled               TEXT            ,
+            Enabled               BLOB            ,
             filename              TEXT            ,
             help                  TEXT            )''')
-            
+
             c.execute('''CREATE TABLE IF NOT EXISTS an_replace(
             NAME                  TEXT            ,
             keyword               TEXT            ,
@@ -57,33 +60,35 @@ class base():
             replace               TEXT            ,
             re_way                TEXT            ,
             Explain               TEXT            ,
-            Enabled               TEXT            ,
+            Enabled               BLOB            ,
             filename              TEXT            ,
             help                  TEXT            )''')
-            
+
             c.execute('''CREATE TABLE IF NOT EXISTS Platform_access(
             NAME                  TEXT            ,
             access                TEXT            ,
             access_way            TEXT            ,
             Explain               TEXT            ,
-            Enabled               TEXT            ,
+            Enabled               BLOB            ,
             filename              TEXT            ,
-            help                  TEXT            )''') 
-            
-            
-            
+            help                  TEXT            )''')
 
-    def empty_table(table_name,con=sql()):
+
+
+    @classmethod
+    def empty_table(cls,table_name,con=sql()):
         with con:
             cur = con.cursor()
             cur.execute(f"DELETE FROM {table_name}")
             con.commit()
-    def del_table(table_name,con=sql()):
+    @classmethod
+    def del_table(cls,table_name,con=sql()):
         with con:
             cur = con.cursor()
             cur.execute(f"drop table {table_name}")
             con.commit()
-    def select_table(con=sql()):
+    @classmethod
+    def select_table(cls,con=sql()):
         with con:
             cur = con.cursor()
             cur.execute("""SELECT name FROM sqlite_master
@@ -91,81 +96,91 @@ class base():
                         ORDER BY name;""")
             rows = cur.fetchall()
             return rows
-    def print_select_table_all():
+    @classmethod
+    def print_select_table_all(cls):
         row=base.select_table()
         for tab in row:
             rows=base.table_read(tab[0],con=sql())
             for rowss in rows:
                 print(rowss[:])
-        
-        
-    def del_all_table():
+
+    @classmethod
+    def del_all_table(cls):
         row=base.select_table()
         for tab in row:
             base.del_table(tab[0])
-            
-    def reset_table():
+
+    @classmethod
+    def reset_table(cls):
         base.del_all_table()
         base.check_sql()
-        
-    def table_read(table,con=sql()):
+    @classmethod
+    def table_read(cls,table,con=sql()):
         with con:
             con.row_factory = sqlite.Row
             cur = con.cursor()
             cur.execute(f"SELECT * FROM {table}")
             rows = cur.fetchall()
             return rows
-        
-            
-            
-            
+
+
+
+
 class plugins_sql():
-    def inf(name,version=None,author=None,explain=None,Enabled=True,con=sql()):
+    @classmethod
+    def inf(cls,name,version=None,author=None,explain=None,Enabled=True,con=sql()):
         back_filename = os.path.splitext(os.path.basename(getframeinfo(stack()[-1][0]).filename))[0]
         with con:
             cur = con.cursor()
             cur.execute(f"INSERT INTO plugins VALUES('{name}','{version}','{author}','{explain}','{Enabled}','{back_filename}')")
             con.commit()
-    def read(con=sql()):
+    @classmethod
+    def read(cls,con=sql()):
         with con as co:
             co.row_factory = sqlite.Row
             cur = co.cursor()
             cur.execute("SELECT * FROM plugins")
             rows = cur.fetchall()
             return rows
-        
+
             for row in rows:
                 print(f"{row['id']} {row['name']} {row['price']}")
 class qu_key():
-    def _write(table,name,keyword,key_way,answer,an_way,explain,help,Enabled,con):
+    @classmethod
+    def _write(cls,table,name,keyword,key_way,answer,an_way,explain,help,Enabled,con):
         keyword=ujson.dumps(keyword)
         back_filename = os.path.splitext(os.path.basename(getframeinfo(stack()[-1][0]).filename))[0]
         with con:
             cur = con.cursor()
-            cur.execute(f"INSERT INTO {table} VALUES('{name}','{keyword}','{key_way}','{answer}','{an_way}','{explain}','{Enabled}','{back_filename}','{help}')")
-    def write(name=None,keyword=None,key_way=0,answer=None,an_way=0,explain=None,help=None,Enabled=True,con=sql()):
+            cur.execute(f"INSERT INTO {table} VALUES('{name}','{keyword}','{key_way}','{answer}','{an_way}','{explain}',{Enabled},'{back_filename}','{help}')")
+    @classmethod
+    def write(cls,name=None,keyword=None,key_way=0,answer=None,an_way=0,explain=None,help=None,Enabled=True,con=sql()):
         keyword=ujson.dumps(keyword)
         back_filename = os.path.splitext(os.path.basename(getframeinfo(stack()[-1][0]).filename))[0]
         with con:
             cur = con.cursor()
-            cur.execute(f"INSERT INTO qu_key VALUES('{name}','{keyword}','{key_way}','{answer}','{an_way}','{explain}','{Enabled}','{back_filename}','{help}')")
-    def read(con=sql()):
+            cur.execute(f"INSERT INTO qu_key VALUES('{name}','{keyword}','{key_way}','{answer}','{an_way}','{explain}',{Enabled},'{back_filename}','{help}')")
+    @classmethod
+    def read(cls,con=sql()):
         with con:
             con.row_factory = dict_factory
             cur = con.cursor()
             cur.execute("SELECT * FROM qu_key")
             rows = cur.fetchall()
+            print(rows)
             return rows
             #for row in rows:
             #    print(f"{row['id']} {row['name']} {row['price']}")
     class admin:
-        def write(name=None,keyword=None,key_way=0,answer=None,an_way=0,explain=None,help=None,Enabled=True,con=sql()):
+        @classmethod
+        def write(cls,name=None,keyword=None,key_way=0,answer=None,an_way=0,explain=None,help=None,Enabled=True,con=sql()):
             keyword=ujson.dumps(keyword)
             back_filename = os.path.splitext(os.path.basename(getframeinfo(stack()[-1][0]).filename))[0]
             with con:
                 cur = con.cursor()
-                cur.execute(f"INSERT INTO qu_key_admin VALUES('{name}','{keyword}','{key_way}','{answer}','{an_way}','{explain}','{Enabled}','{back_filename}','{help}')")
-        def read(con=sql()):
+                cur.execute(f"INSERT INTO qu_key_admin VALUES('{name}','{keyword}','{key_way}','{answer}','{an_way}','{explain}',{Enabled},'{back_filename}','{help}')")
+        @classmethod
+        def read(cls,con=sql()):
             with con:
                 con.row_factory = dict_factory
                 cur = con.cursor()
@@ -176,12 +191,15 @@ class qu_key():
                 #    print(f"{row['id']} {row['name']} {row['price']}")
 
 class an_replace():
-    def write(name=None,keyword=None,key_way=0,replace=None,re_way=0,explain=None,help=None,Enabled=True,con=sql()):
+    @classmethod
+
+    def write(cls,name=None,keyword=None,key_way=0,replace=None,re_way=0,explain=None,help=None,Enabled=True,con=sql()):
             back_filename = os.path.splitext(os.path.basename(getframeinfo(stack()[-1][0]).filename))[0]
             with con:
                 cur = con.cursor()
-                cur.execute(f"INSERT INTO an_replace VALUES('{name}','{keyword}','{key_way}','{replace}','{re_way}','{explain}','{Enabled}','{back_filename}','{help}')")
-    def read(con=sql()):
+                cur.execute(f"INSERT INTO an_replace VALUES('{name}','{keyword}','{key_way}','{replace}','{re_way}','{explain}',{Enabled},'{back_filename}','{help}')")
+    @classmethod
+    def read(cls,con=sql()):
         with con:
             con.row_factory = dict_factory
             cur = con.cursor()
@@ -189,12 +207,15 @@ class an_replace():
             rows = cur.fetchall()
             return rows
 class access():
-    def write(name=None,access=None,access_way=0,explain=None,help=None,Enabled=True,con=sql()):
+    @classmethod
+    def write(cls,name=None,access=None,access_way=0,explain=None,help=None,Enabled=True,con=sql()):
             back_filename = os.path.splitext(os.path.basename(getframeinfo(stack()[-1][0]).filename))[0]
             with con:
                 cur = con.cursor()
-                cur.execute(f"INSERT INTO platform_access VALUES('{name}','{access}','{access_way}','{explain}','{Enabled}','{back_filename}','{help}')")
-    def read(con=sql()):
+                cur.execute(f"INSERT INTO platform_access VALUES('{name}','{access}','{access_way}','{explain}',{Enabled},'{back_filename}','{help}')")
+
+    @classmethod
+    def read(cls,con=sql()):
         with con:
             con.row_factory = dict_factory
             cur = con.cursor()

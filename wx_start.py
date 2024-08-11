@@ -3,7 +3,7 @@
 import json
 import os,subprocess,sys,termios
 from time import sleep
-from more_action import *
+from api_action import *
 from goto import with_goto,goto,label
 
 from standard_print import printerr, printinf
@@ -36,9 +36,9 @@ def logging():
         printinf("请手动执行登录，登录成功后输入任意字符")
         if check_wxchat_logging() == 0:
             qrcode_cache=qrcode.QR_code()
-            
+
             printinf(f"二维码位于:{qrcode_cache}")
-            
+
         label .pre_posix
         pre_posix()
         check=json.loads(check_wxchat_logging())
@@ -52,8 +52,8 @@ def logging():
             printerr("无法检测登录状态，似乎并未启动成功,键入任意字符后重新执行启动")
             pre_posix()
             goto .run_posix
-            
-    elif name == "nt":   
+
+    elif name == "nt":
         label .run_nt
         printinf("执行启动")
         subprocess.Popen(["./wx/wxdriver_cli.exe"])
@@ -72,11 +72,11 @@ def logging():
             printerr("无法检测登录状态，似乎并未启动成功,键入任意字符后重新执行启动")
             pre_posix()
             goto .run_nt
-        
+
     else:
         printerr("不支持的系统")
         os.exit
-        
-        
+
+
 if __name__ == "__main__":
     logging()

@@ -1,6 +1,6 @@
 from action_sql import plugins_sql, qu_key
-from another_action_base import wxid_form_cr
-from more_action import delete_group_members
+from another_action_base import get_roomNick_in_chatroom
+from api_action import kick_guild_member
 
 def  del_group(l):
     qu=l["qu"]
@@ -8,12 +8,12 @@ def  del_group(l):
     qu_data=qu.splitlines()
     sender=qu_data[1]
     if qu_data[1][:3] != "wxid":
-        wxi=wxid_form_cr(wxid,sender)
+        wxi=get_roomNick_in_chatroom(wxid,sender)
         if wxi==None:
             return "error_wfc"
     elif qu_data[1][:3] == "wxid":
         wxi=sender
-    delete_group_members(wxid,wxi)
+    kick_guild_member(wxi,wxid)
     return "success"
 if __name__ =='__main__':
     #插件信息写入

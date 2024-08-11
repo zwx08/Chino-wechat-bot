@@ -7,15 +7,16 @@ import time
 import ujson
 import requests
 from flask import Flask, request
-from answer import answer
+# from answer import answer
 from file_action import *
-import threading,subprocess
+import threading
+import subprocess
 
 config=config_read()
 address=config["connect"]["rece_address"]
 port=config["connect"]["rece_port"]  #信息接收端口
 
-        
+
 #class myThread (threading.Thread):   # 继承父类threading.Thread
 #    def __init__(self,wxid,qu,wxid_group,name):
 #        threading.Thread.__init__(self)
@@ -23,12 +24,12 @@ port=config["connect"]["rece_port"]  #信息接收端口
 #        self.wxid = wxid
 #        self.qu = qu
 #        self.wxid_group = wxid_group
-        
+
 
 #    def run(self):   # 把要执行的代码写到run函数里面 线程在创建后会直接运行run函数
 #        answer(self.wxid,self.qu,self.wxid_group)
 
-        
+
 
 web = requests.session()
 web.headers['Content-Type'] = 'application/x-www-form-urlencoded'
@@ -50,7 +51,7 @@ def jieshou():
             byte=msg_data["BytesExtra"]
             wxid_group =byte['wxid']
         if msg_data["IsSender"] == 0:     #判断是否是自己发的
-            daytime=time.strftime("%%Y-%m-%d", time.localtime()) 
+            daytime=time.strftime("%%Y-%m-%d", time.localtime())
             with subprocess.Popen(["python","./answer.py",wxid,wxid_group,qu], stdout=subprocess.PIPE, stderr=subprocess.STDOUT) as p, \
                 open(f'./logs/wx_answer_{daytime}.log', 'ab') as file:
                 for line in p.stdout: # b'\n'-separated lines

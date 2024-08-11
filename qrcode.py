@@ -1,7 +1,7 @@
 import os
 from PIL import Image
 from io import BytesIO
-from more_action import check_wxchat_logging, get_QR_code
+from api_action import check_wxchat_logging, get_QR_code
 from standard_print import printinf
 
 from pyzbar.pyzbar import decode
@@ -28,8 +28,8 @@ def QR_code():
         f.write(req.content)
     main(cache)
     return cache
-                
-            
+
+
 
 
 if __name__ == '__main__':

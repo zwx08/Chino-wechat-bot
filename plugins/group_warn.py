@@ -2,7 +2,7 @@ import os
 
 import yaml
 from action_sql import plugins_sql, qu_key
-from another_action_base import nickname, wxid_form_cr
+from another_action_base import nickname, get_roomNick_in_chatroom
 from file_action import data_read, data_write_data
 import ujson
 
@@ -37,10 +37,10 @@ class warn: #警告
             t=1
         sender=qu_data[1]
         if qu_data[1][:5] != "wxid_":
-            wxi=wxid_form_cr(wxid,sender)
+            wxi=get_roomNick_in_chatroom(wxid,sender)
             if wxi==None:
                 return "error_wfc"
-            
+
         elif qu_data[1][:5] == "wxid_":
             wxi=sender
         time=warn.data_warn_write(wxid,wxi,int(t))
@@ -75,7 +75,7 @@ class warn: #警告
             wxid=qu[0][7:]
         for x in qu_data[1:]:
             if x[:3] != "wxid":
-                wxi=wxid_form_cr(wxid,x)
+                wxi=get_roomNick_in_chatroom(wxid,x)
                 if wxi==None:
                     return "error_wfc"
         data=data_read()
@@ -86,7 +86,7 @@ class warn: #警告
             return "success"
         else:
             return "error"
-        
+
 if __name__ =="__main__":
     filename=os.path.basename(__file__)
     plugins_sql.inf(os.path.basename(__file__),"0.0.1","zwx08","群管理-警告")
@@ -94,4 +94,4 @@ if __name__ =="__main__":
     qu_key.write("[group]warn","&w_all",1,"{plugin}.warn.w_all",1)
     qu_key.admin.write("[group]warn","&w_alll",1,"{plugin}.warn.w_all_all",1)
     qu_key.admin.write("[group]warn","&w_del",1,"{plugin}.warn.w_del",1)
-    
+

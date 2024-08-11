@@ -1,5 +1,5 @@
 from action_sql import plugins_sql, qu_key
-from more_action import send_msg
+from api_action import send_msg
 
 rootdir=""  #更改为你自己放图片的文件夹
 def image(wxid): #随机图片
@@ -14,7 +14,7 @@ def image(wxid): #随机图片
         #     print("filename is:" + filename)
         #     print("the full name of the file is:" + os.path.join(parent, filename))
     x = random.randint(0, len(file_names)-1)
-    image=rootdir+"\\"+file_names[x]  
+    image=rootdir+"\\"+file_names[x]
     send_msg(wxid,image,3)
     return ""
 

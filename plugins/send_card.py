@@ -1,5 +1,5 @@
 from action_sql import plugins_sql, qu_key
-from more_action import invite_group, send_friend
+from api_action import invite_group, send_friend
 from action_plugins import config
 
 first_content="""chatroom: #群聊
@@ -36,8 +36,8 @@ def send_card(qu,wxid):
                     for z in key:
                         if qu.find(z) != -1:
                             send_friend(send,wxid,1)
-                    
-            
+
+
 def main(l):
     qu=l["qu"]
     wxid=l["wxid"]
@@ -49,4 +49,3 @@ if __name__ == "__main__":
     plugins_sql.inf("send_card",0.01,"zwx08","发送群名片")
     qu_key.write("send_card","&send",1,"plugins.send_card.main",1,"发送群名片")
     config.first("send_card",first_content)
-    

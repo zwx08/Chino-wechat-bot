@@ -36,7 +36,7 @@ def main(l):
 
 
     if qu.find("好") != -1:
-        
+
         if qu.find("上午") != -1:
             if morning:
                 an="_a_上午好~"
@@ -74,6 +74,6 @@ def main(l):
         return an
 if __name__ =="__main__":
     config=config_read()
-    robotname=config["robotname"]
+    robotname=config.robotname
     plugins_sql.inf("greet",0.01,"zwx08","问候")
     qu_key.write("greet",[":@",robotname],1,"{plugin}.main",1,"greet_早/中/晚好",Enabled=False)

@@ -19,13 +19,12 @@ class config():   #通用yaml文件
         filename = os.path.join(os.path.dirname(__file__),'config',f'{name}.yaml').replace("\\","/")
         with open(filename,"w",encoding='utf-8') as f:
             f.write(yaml.dump(w,allow_unicode=True))
-            
+
     def first(name,first_content):
         filename = os.path.join(os.path.dirname(__file__),'config',f'{name}.yaml').replace("\\","/")
         try:
             with open(filename, 'x', encoding='utf-8') as file:
                 file.write(first_content)
                 file.close
-        except:
+        except:  # noqa: E722
             pass
-            

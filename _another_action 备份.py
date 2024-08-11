@@ -2,7 +2,7 @@
 #随机图片注意:文件夹中文件格式必须为微信支持图片格式,且不得有乱码文件，部分在action.py中有写，如果有其他微信支持扩展名（比如jpeg)，请按照action中格式添加到action.py
 #自设字符转换
 from distutils.log import error
-from more_action import *
+from api_action import *
 import httpx,ujson,sys,json
 from sympy import *
 import yaml
@@ -13,15 +13,15 @@ def nickname(port,wxid_group):
     wxid_de=get_wxid_details(port,wxid_group)
     nickname=wxid_de["data"]["nickName"]
     return nickname
-def wxid_form_cr(wxid,sender):
+def get_roomNick_in_chatroom(wxid,sender):
     if "@chatroom" in wxid:
         cda=get_chatroom_details_all(wxid)
         for x in cda['data']:
             if x["NickName"] == sender or x["Alias"] == sender or x["RoomNick"] == sender:
                 return x["UserName"]
     else:
-        print("Error for wxid is must be chatroom(wxid_form_cr)")
-        return 
+        print("Error for wxid is must be chatroom(get_roomNick_in_chatroom)")
+        return
 def wxid_form_nickname_cr(port,wxid,nickname):
     if "@chatroom" in wxid:
         cda=get_chatroom_details_all(wxid)
@@ -128,10 +128,10 @@ class warn:
             t=1
         sender=qu_data[1]
         if qu_data[1][:3] != "wxid":
-            wxi=wxid_form_cr(wxid,sender)
+            wxi=get_roomNick_in_chatroom(wxid,sender)
             if wxi==None:
                 return "error_wfc"
-            
+
         elif qu_data[1][:3] == "wxid":
             wxi=sender
         time=warn.data_warn_write(wxid,wxi,int(t))
@@ -155,7 +155,7 @@ class warn:
             wxid=qu[0][7:]
         for x in qu_data[1:]:
             if x[:3] != "wxid":
-                wxi=wxid_form_cr(wxid,x)
+                wxi=get_roomNick_in_chatroom(wxid,x)
                 if wxi==None:
                     return "error_wfc"
         data=data_read()
@@ -166,7 +166,7 @@ class warn:
             return "success"
         else:
             return "error"
-        
+
 class another_data_write:
     def admin(qu):
         qu_data=qu.splitlines()
@@ -180,7 +180,7 @@ class another_data_write:
             return 'error'
         else:
             return 'success'
-    
+
     def block(qu):
         qu_data=qu.splitlines()
         data=data_read()
@@ -193,7 +193,7 @@ class another_data_write:
             return 'error'
         else:
             return 'success'
-        
+
     def white(qu):
         qu_data=qu.splitlines()
         data=data_read()
@@ -205,7 +205,7 @@ class another_data_write:
             return 'error'
         else:
             return 'success'
-    
+
 #随机图片
 def image():
     import os
@@ -220,7 +220,7 @@ def image():
         #     print("filename is:" + filename)
         #     print("the full name of the file is:" + os.path.join(parent, filename))
     x = random.randint(0, len(file_names)-1)
-    image=rootdir+"\\"+file_names[x]  
+    image=rootdir+"\\"+file_names[x]
     return image
 
 def getting_ip(argv):
@@ -231,12 +231,12 @@ def getting_ip(argv):
     url2 = url2 + format(args)
     response = httpx.get(url)
     response2 = httpx.get(url2)
-    
+
     str=response.text.replace('\"','') #去掉双引号
     str=str.replace('[','')      #去掉方括号
     str=str.replace(']','')
     str=str.replace(' ','')
-    
+
     str=str.split(",")  #已逗号为分割符号，分割字符串为数组
     str[4] = str[4].replace('\n', '') #去掉回车符号
 
@@ -261,7 +261,7 @@ def getting_ip(argv):
 
 class sympy:
     x, y, z ,a ,b= symbols('x y z a b')
-    
+
 
 
 def pixiv():

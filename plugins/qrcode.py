@@ -5,7 +5,7 @@ import httpx,os
 from io import BytesIO
 from PIL import Image
 
-from more_action import send_msg
+from api_action import send_msg
 from action_sql import plugins_sql, qu_key
 def get(text):
     req=httpx.post("https://api.xingzhige.com/API/Qrcode/",data={"text":text})
@@ -22,7 +22,7 @@ def main(l):
     wxid=l["wxid"]
     cache=get(text)
     send_msg(wxid,cache,3)
-    
+
 if __name__=="__main__":
     plugins_sql.inf("qrcode",0.01,"zwx08","生成qrcode")
     qu_key.write("qrcode","&qrcode",1,"{plugin}.main",1)

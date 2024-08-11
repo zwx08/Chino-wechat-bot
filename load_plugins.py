@@ -1,8 +1,8 @@
 import subprocess
 # -*- coding: utf-8 -
 import os
-from standard_print import printinf, printmsg
-from action_sql import *
+from .standard_print import printinf, printmsg
+from .action_sql import *
 
 cur_path = os.path.dirname(os.path.realpath(__file__))# 当前脚本所在的文件绝对路径
 
@@ -18,7 +18,7 @@ def run_case():
             # 查看文件名
             printinf(f"加载{c}")
             subprocess.Popen(['python',(os.path.join(case_path, c))],cwd=os.getcwd(),stdout=subprocess.PIPE,stderr=subprocess.PIPE)
-    
+
 if __name__ == "__main__":
     run_case()
-    
+

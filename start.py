@@ -1,7 +1,7 @@
 import subprocess
 from standard_print import printinf
 from wx_start import logging
-from more_action import *
+from api_action import *
 from goto import with_goto,goto,label
 
 @with_goto
@@ -30,7 +30,7 @@ def check():
             goto .che
     else:
         goto .inp
-        
+
 if __name__ == "__main__":
     check()
     print("执行前置加载")

@@ -2,8 +2,8 @@ import httpx
 from file_action import *
 
 config=config_read()
-address=config["connect"]["sent_address"]
-port=config["connect"]["sent_port"]
+address=config["connect"]["host"]
+port=config["connect"]["port"]
 
 #发送消息
 def sent_msg(port,wxid,content):
@@ -24,7 +24,7 @@ def sent_msg(port,wxid,content):
         res=res
     print(res)
     return res
-    
+
 
 #获取好友详细信息
 def get_userinfo(port,wxid):

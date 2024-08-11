@@ -2,15 +2,17 @@
 #本例子只开启http端口接收，使用post方法
 #此文件需answer.py
 
-import ujson,json
+import ujson
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from time import sleep
+
 from _action import *
 from answer import *
 from another_action import *
 from file_action import *
-import threading,subprocess,sys,os
-import os,sys
+import threading
+import subprocess
+import sys
+
 from subprocess import Popen, PIPE, STDOUT
 def ans_popen(wxid,wxid_group,qu):
     current_encoding = 'utf-8'
@@ -22,12 +24,12 @@ def ans_popen(wxid,wxid_group,qu):
     while popen.poll() is None:                      # None表示正在执行中
         r = popen.stdout.readline().decode(current_encoding)
         sys.stdout.write(r)                                # 可修改输出方式，比如控制台、文件等
-        
+
     # 重定向错误输出
     if popen.poll() != 0:                      # 不为0表示执行错误
         err = popen.stderr.read().decode(current_encoding)
-        sys.stdout.write(err)                 # 可修改输出方式，比如控制台、文件等   
-        
+        sys.stdout.write(err)                 # 可修改输出方式，比如控制台、文件等
+
 
 
 config=config_read()
@@ -57,7 +59,7 @@ class MyHTTPServer(BaseHTTPRequestHandler):
                 byte=msg_data["BytesExtra"]
                 wxid_group =byte['wxid']
             if msg_data["IsSender"] == 0:     #判断是否是自己发的
-                daytime=time.strftime("%Y-%m-%d", time.localtime()) 
+                daytime=time.strftime("%Y-%m-%d", time.localtime())
                 #print(wxid,wxid_group,qu)
                 with Popen(["python","./answer.py",wxid,wxid_group,qu], stdout=PIPE, stderr=STDOUT) as p, \
                     open(f'./logs/wx_answer_{daytime}.log', 'ab+') as file:

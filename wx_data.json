@@ -9,7 +9,10 @@
         "wxid_3pqio6xh27ib22",
         "wxid_u3ow88fmzh3122"
     ],
-    "wxid_block": ["25301930842@chatroom","20848218285@chatroom"],
+    "wxid_block": [
+        "25301930842@chatroom",
+        "20848218285@chatroom"
+    ],
     "wxid_white": [],
     "wx_name": {
         "wxid_2eokvnwm9a5a22": "主人",
@@ -41,20 +44,17 @@
         }
     },
     "own_inf": {
-        "wxid": "wxid_wta02lbjszk622",
+        "userName": "wxid_wta02lbjszk622",
         "nickName": "智乃酱かふう ちの",
-        "email": "",
-        "account": "znj-1204",
-        "phone": "18121244493",
-        "qq": "",
+        "alias": "znj-1204",
+        "mobile": "18121244493",
         "sex": "女",
+        "country": "CN",
         "province": "Shanghai",
         "city": "",
-        "signName": "~",
-        "nation": "CN",
-        "headerBig": "",
-        "headerSmall": "http:\/\/wx.qlogo.cn\/mmhead\/ver_1\/a9kT2yMT80jSoZh82NKuP49kbMaSuS07E7rBnnvJnRaGlXegibewdPzxjamYmjTHGiaiaSkrLgZpkNXklIWly803TZyggIo1DEN0estcCqvoN8\/132",
-        "device": "android"
+        "signature": "~",
+        "bigHeadImgUrl": "https:\/\/wx.qlogo.cn\/mmhead\/ver_1\/kMdTIicdBia2AqeJbMw40F2ULPqs5Bibz9PLQNcBO0IetgVBFzCCbsfbRfypJfDUuxHib4uEak26tMZ3IJ52vqnxbhEuxUBOqDtWGl0Hsmj6ea3giaSiaY89CRQ2I0Km39aLPb\/0",
+        "smallHeadImgUrl": "https:\/\/wx.qlogo.cn\/mmhead\/ver_1\/kMdTIicdBia2AqeJbMw40F2ULPqs5Bibz9PLQNcBO0IetgVBFzCCbsfbRfypJfDUuxHib4uEak26tMZ3IJ52vqnxbhEuxUBOqDtWGl0Hsmj6ea3giaSiaY89CRQ2I0Km39aLPb\/132"
     },
     "ca_save": {}
 }

@@ -1,6 +1,6 @@
 import httpx,ujson
 from action_sql import plugins_sql, qu_key
-from more_action import send_art, send_msg
+from api_action import send_art, send_msg
 
 
 def main(l):
@@ -13,10 +13,10 @@ def main(l):
         req_data=req["data"]
         send_art(req_data["name"],wxid,req_data["cover"],req_data["songname"],req_data["songurl"])
         if req_data["pay"]=="免费":
-            send_msg(wxid,req_data["src"])
+            send_msg.text(wxid,req_data["src"])
         if req_data["pay"]=="VIP":
             re=f"http://tool.liumingye.cn/music/?page=audioPage&type=YQB&name={name}"
-            send_msg(wxid,re)
+            send_msg.text(wxid,re)
     else:
             return f'{req.get("code")} {req.get("msg")}'
 
