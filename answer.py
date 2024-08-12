@@ -1,7 +1,13 @@
 #默认为使用wxid作为userid，如果想要更改为使用单一userid请更改所有调用API_answer后的wxid改为userid
+from ast import Tuple
+import os
+from pluginlib import PluginLoader
+import pluginlib
+
+from Chino_old.model_definition import AnswerBase, AnswerBaseList
 from . import action_sql
 #from another_action import _a_ , image, name_write,data_name_write,read_name_all,warn,w_all
-from .api_action import *
+from  . import api_action as api
 from .another_action_base import get_roomNick_in_chatroom
 import schedule
 # from sympy import *
@@ -11,31 +17,14 @@ from .preload import preload
 from .load_plugins import run_case as load_plugins
 import sys
 import xmltodict
-from .standard_print import printerr,printinf,printmsg  # noqa: F403
+from .standard_print import printerr,printinf,printmsg
+from .standard_print import logger
 import func_timeout
 import ujson
-import logging
 import xml.etree.ElementTree as ET
 
-# logging.basicConfig(level=logging.DEBUG)
-
-from logging.handlers import RotatingFileHandler
 
 
-logger = logging.getLogger(__name__)
-
-file_handler = RotatingFileHandler('app.log', maxBytes=10000, backupCount=3)
-file_handler.setLevel(logging.DEBUG)
-console_handler = logging.StreamHandler()
-console_handler.setLevel(logging.DEBUG)
-
-
-formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-file_handler.setFormatter(formatter)
-console_handler.setFormatter(formatter)
-
-logger.addHandler(file_handler)
-logger.addHandler(console_handler)
 
 
 config=config_read()
@@ -44,11 +33,16 @@ port=config.connect.port
 robotname=config.robotname
 action_sql.base.check_sql()
 preload()
-load_plugins()
+# load_plugins()
 
-row_qukey_admin=action_sql.qu_key.admin.read()
-row_qukey=action_sql.qu_key.read()
-row_access=action_sql.access.read()
+# row_qukey_admin=action_sql.qu_key.admin.read()
+# row_qukey=action_sql.qu_key.read()
+# row_access=action_sql.access.read()
+
+
+loader = PluginLoader(paths=[os.path.join(os.path.dirname(__file__),"plugins")],group="msg_plugin")
+plugins = loader.plugins
+print("plugins"+str(  plugins))
 
 
 def run_plugin(row):
@@ -62,12 +56,12 @@ def run_plugin(row):
         if Def.find("{plugin}") != -1:
             Def=Def.replace("{plugin}",f"plugins.{row['filename']}")
         try:
-            an_=eval(f"{Def}")(l)
+            an_=eval(f"{Def}")(msg_l)
         except func_timeout.exceptions.FunctionTimedOut:
             printerr("qu_key({row['NAME']})执行超时")
             an_="超时-{row['NAME']}"
 def keyword_(keyw,row):
-    qu=l["qu"]
+    qu=msg_l["qu"]
     if row["key_way"] == "0":
         #print(.21)
         if qu == keyw:
@@ -88,7 +82,6 @@ def keyword_(keyw,row):
             return run_plugin(row)
 def sql_row(rows):
     for row in rows:
-        logging.debug(row)
         #print(row)
         if row["Enabled"] == "True":
 
@@ -99,8 +92,6 @@ def sql_row(rows):
                     keyword_(key_x,row)
             elif isinstance(keyword,(str,int)) is True:
                 keyword_(keyword,row)
-        else:
-            logging.debug("is false")
 
 def sql_row_access(rows):
     global an_
@@ -111,7 +102,7 @@ def sql_row_access(rows):
                 if Def.find("{plugin}") != -1:
                     Def=Def.replace("{plugin}",f"plugins.{row['filename']}")
                 try:
-                    an_=eval(f"{Def}")(l)
+                    an_=eval(f"{Def}")(msg_l)
                 except func_timeout.exceptions.FunctionTimedOut:
                     printerr("access({row['NAME']})执行超时")
                 #print(an_)
@@ -132,7 +123,7 @@ def run_an_replace(row,an):
         if Def.find("{plugin}") != -1:
             Def=Def.replace("{plugin}",f"plugins.{row['filename']}")
         try:
-            an=eval(f"{Def}")(l,an)
+            an=eval(f"{Def}")(msg_l,an)
         except func_timeout.exceptions.FunctionTimedOut:
             printerr("qu_key({row['NAME']})执行超时")
             an="超时-an_replace({row['NAME']})"
@@ -150,11 +141,16 @@ def sql_row_an_replace(rows,an):
     return an
 
 
-async def send_msg_an():        #允许传入列表，实现每次调用加一次number_of_times[wxid_group]，且如果这个数字超过指定数量后不回复
-    wxid=l["wxid"]
+
+def Replace_msg(context:str):  #TODO
+    ...
+
+
+async def send_msg_an(plugin_result: AnswerBase):        #允许传入列表，实现每次调用加一次number_of_times[wxid_group]，且如果这个数字超过指定数量后不回复
+    wxid=msg_l["wxid"]
     #wxid_group=l["wxid_group"]
     #print(an)
-    if 'an_' != None :
+
         #print(an)
 
         #if 'wxid_group' in locals():
@@ -166,26 +162,83 @@ async def send_msg_an():        #允许传入列表，实现每次调用加一�
         #        return
 
         #else:
-        if wxid in number_of_times:
-                number_of_times[wxid] += 1
-        else:
-                number_of_times[wxid] = 1
-        if number_of_times[wxid] > 10:
-                return
+    if wxid in number_of_times:
+        number_of_times[wxid] += 1
+    else:
+        number_of_times[wxid] = 1
+    if number_of_times[wxid] > 10:
+        return
+    answer_send=plugin_result.answer
 
-
-        if an_=="" or an_ is None:
+    if isinstance(answer_send,str):
+        if answer_send=="":
+            logger.info("answer_send为空字符串")
             return
 
+    if plugin_result.Replace:  #TODO
+        pass
 
-        if isinstance(an_,(str,int)) is True:
 
-            send_msg.text(wxid,sql_row_an_replace(action_sql.an_replace.read(),an_))
-        elif isinstance(an_,(list)) is True:
-            for x in an_:
-                send_msg.text(wxid,sql_row_an_replace(action_sql.an_replace.read(),x))
-        else:
-            send_msg.text(wxid,str(an_))
+
+
+
+
+    match plugin_result.send_way:
+        case "Text":
+            if isinstance(answer_send,str):
+                api.send_msg.text(wxid,answer_send)
+            elif isinstance(answer_send,dict):
+                api.send_msg.text(wxid,**answer_send)
+        case "Image":
+            if isinstance(answer_send,str):
+                api.send_msg.image(wxid,answer_send)
+            elif isinstance(answer_send,dict):
+                api.send_msg.image(wxid,**answer_send)
+        case "File":
+            if isinstance(answer_send,str):
+                api.send_msg.file(wxid,answer_send)
+            elif isinstance(answer_send,dict):
+                api.send_msg.file(wxid,**answer_send)
+        case "Gif":
+            if isinstance(answer_send,str):
+                api.send_msg.gif(wxid,answer_send)
+            if isinstance(answer_send,dict):
+                api.send_msg.gif(wxid,**answer_send)
+        case "Url":
+            if isinstance(answer_send,str):
+                raise RuntimeError("Url发送方式仅支持dict")
+            if isinstance(answer_send,dict):
+                api.send_msg.url(wxid,**answer_send)
+        case "xml":
+            if isinstance(answer_send,str):
+                api.send_msg.xml(wxid,answer_send)
+            if isinstance(answer_send,dict):
+                api.send_msg.xml(wxid,**answer_send)
+        case "quote":
+            if isinstance(answer_send,str):
+                raise RuntimeError("quote发送方式仅支持dict")
+            if isinstance(answer_send,dict):
+                api.send_msg.quote(wxid,**answer_send)
+        case "Fav":
+            if isinstance(answer_send,str):
+                try:
+                    answer_send_int=int(answer_send)
+                except ValueError as e:
+                    raise RuntimeError(f"Fav发送中需传入可转为int的favLocalID:{e}")
+                else:
+                    api.send_msg.fav(wxid,answer_send_int)
+            if isinstance(answer_send,dict):
+                api.send_msg.fav(wxid,**answer_send)
+
+
+    # if isinstance(an_,(str,int)) is True:
+
+    #     send_msg.text(wxid,sql_row_an_replace(action_sql.an_replace.read(),an_))
+    # elif isinstance(an_,(list)) is True:
+    #     for x in an_:
+    #         send_msg.text(wxid,sql_row_an_replace(action_sql.an_replace.read(),x))
+    # else:
+    #     send_msg.text(wxid,str(an_))
     return
 
 
@@ -194,8 +247,8 @@ async def send_msg_an():        #允许传入列表，实现每次调用加一�
 #@func_timeout.func_set_timeout(30)
 async def answer(wxid,wxid_group,qu):  #主调用
     data=data_read()
-    global an_
-    an_=None
+    #global an_
+    #an_=None
     qu_xml=qu_xml_data=qu_reply_content=qu_reply_wxid=None
     if qu.find("<?xml") == 0:
         qu_xml=qu
@@ -212,17 +265,13 @@ async def answer(wxid,wxid_group,qu):  #主调用
             pass
 
     #@识别
-    if qu.find("@") and qu.find(" ")== 0:
+    if qu.find("@") == 0 and qu.find(" ") != -1:
         if wxid_group != "":
             own_inf=data["own_inf"]
-            own_inf_roomNick=get_roomNick_in_chatroom(wxid,own_inf["wxid"])
-            if own_inf_roomNick:
-                own_inf_group_nickname=own_inf_roomNick
-            else:
-                own_inf_group_nickname=own_inf["nickName"]
-            #print(f"@{own_inf_group_nickname}")
-            if qu.find(f"@{own_inf_group_nickname}") != -1:
-                qu=qu.replace(f"@{own_inf_group_nickname}",":@")
+            own_inf_roomNick=get_roomNick_in_chatroom(wxid,own_inf["userName"])
+            print(f"@{own_inf_roomNick}")
+            if qu.find(f"@{own_inf_roomNick}"+" ") != -1:
+                qu=qu.replace(f"@{own_inf_roomNick}"+" ",":@")
             #print(qu)
 
 
@@ -241,20 +290,19 @@ async def answer(wxid,wxid_group,qu):  #主调用
         isChatroom = False
     else:
         isChatroom = True
-    global l
-    l={"robotname":robotname,"qu":qu,"wxid":wxid,"wxid_group":wxid_group,"qu_xml":qu_xml,"qu_xml_data":qu_xml_data,"qu_reply_content":qu_reply_content,"qu_reply_wxid":qu_reply_wxid,'isChatroom': isChatroom}
+    global msg_l
+    msg_l={"robotname":robotname,"qu":qu,"wxid":wxid,"wxid_group":wxid_group,"qu_xml":qu_xml,"qu_xml_data":qu_xml_data,"qu_reply_content":qu_reply_content,"qu_reply_wxid":qu_reply_wxid,'isChatroom': isChatroom}
+    print(msg_l)
 
+    # #admin部分
+    # data=data_read()
+    # wxid_admin=data["wxid_admin"]
+    # if wxid in wxid_admin or wxid_group in wxid_admin:
+    #     sql_row(row_qukey_admin)
+    #     if an_ is not None:
+    #         await send_msg_an()
+    #         return
 
-    #admin部分
-    data=data_read()
-    wxid_admin=data["wxid_admin"]
-    if wxid in wxid_admin or wxid_group in wxid_admin:
-        sql_row(row_qukey_admin)
-        if an_ is not None:
-            await send_msg_an()
-            return
-
-    #黑白名单，有bug（确信）   #黑白名单中除了wxid也可以写入 xxx@chatroom （理论上)   ，但是似乎写了chatroom应该是这个chatroom中的所有人都可以用，且要注意这个不能从比如说昵称啊什么的（wfc）转换成wxid，所以添加的时候请直接添加wxid等
     block=data["wxid_block"]
     white=data["wxid_white"]
     if wxid  in block or wxid_group in block :    #黑名单
@@ -262,19 +310,50 @@ async def answer(wxid,wxid_group,qu):  #主调用
     if len(white) != 0:
         if wxid not in white or wxid_group not in white:   #白名单
             return
-    logging.debug(row_qukey)
-    #other部分
-    sql_row(row_qukey)
-    if an_ is not None :
-        await send_msg_an()
-        return
+
+
+
+
+
+    #plugin
+    #print(plugins.items())
+    for plugins_type, plugins_sec in plugins.items():
+        match plugins_type:
+            case "plugin_common":
+                for plugin_name, plugin_class in plugins_sec.items():
+                    plugin_result=plugin_class.main(msg_l)
+                    if plugin_result is not None:
+                        if isinstance(plugin_result,AnswerBase):
+                            await send_msg_an(plugin_result)
+                        elif isinstance(plugin_result,AnswerBaseList):
+                            for answer_result_base in plugin_result.answers:
+                                await send_msg_an(answer_result_base)
+            case "plugin_admin":
+                if msg_l["wxid"] in data["wxid_admin"]:
+                    for plugin_name,plugin_class in plugins_sec:
+                        plugin_result=plugin_class.main(msg_l)
+                        if plugin_result is not None:
+                            if isinstance(plugin_result,AnswerBase):
+                                await send_msg_an(plugin_result)
+                            elif isinstance(plugin_result,AnswerBaseList):
+                                for answer_result_base in plugin_result.answers:
+                                    await send_msg_an(answer_result_base)
+
+
+
+
+    # #other部分
+    # sql_row(row_qukey)
+    # if an_ is not None :
+    #     await send_msg_an()
+    #     return
     #access接入部分
-    sql_row_access(row_access)
-    #print(an_)
-    if an_ is not None :
-        await send_msg_an()
-        return
-    return
+    # sql_row_access(row_access)
+    # #print(an_)
+    # if an_ is not None :
+    #     await send_msg_an()
+    #     return
+    # return
 
     # #answerAPI部分
     # answer=API_answer(qu,wxid)

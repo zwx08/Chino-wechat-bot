@@ -1,8 +1,7 @@
 import httpx
 import file_action
 from pydantic import BaseModel
-import logging
-from .standard_print import printerr
+from .standard_print import printerr ,logger
 from typing import List, Optional
 
 
@@ -27,7 +26,7 @@ class Request:
         # Create an instance of PostSendItem
         post_data = PostSendItem(api=self.api, data=self.data)
 
-        logging.debug(f"[Res_Send] {post_data}")
+        logger.debug(f"[Res_Send] {post_data}")
 
         # Convert the Pydantic model to a dictionary for sending as JSON
         json_data = post_data.model_dump()
@@ -38,7 +37,7 @@ class Request:
                 response = client.post(self.url, json=json_data)
                 response.raise_for_status()  # This will raise an exception for 4XX/5XX responses
                 response_data = response.json()
-                logging.debug(f"[Res_Receive] {response_data}")
+                logger.debug(f"[Res_Receive] {response_data}")
                 return response_data
         except httpx.HTTPStatusError as e:
             error = {
@@ -477,8 +476,7 @@ class get_chatroom_member_Member(BaseModel):
     roomNick: Optional[str]
     userName: str
 
-class get_chatroom_member_Admin(BaseModel):
-    admin_id: str
+
 
 class get_chatroom_member_ChatRoomData(BaseModel):
     chatRoomName: str
@@ -488,7 +486,7 @@ class get_chatroom_member_ChatRoomData(BaseModel):
     bigHeadImgUrl: Optional[str]
     smallHeadImgUrl: Optional[str]
     creator: str
-    admins: List[get_chatroom_member_Admin]
+    admins: List[str]
     member: List[get_chatroom_member_Member]
     count: int
 class GetChatroomMember(ApiReturn_base):

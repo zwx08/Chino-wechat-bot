@@ -1,8 +1,9 @@
 
 import yaml
-from Chino_old.action_plugins import config
-from Chino_old.another_action_base import get_roomNick_in_chatroom
-from Chino_old.api_action import get_wxid_details
+from action_plugins import config
+from action_sql import an_replace, plugins_sql, qu_key
+from another_action_base import get_roomNick_in_chatroom
+from api_action import get_wxid_details
 
 class call(): #称呼
     @staticmethod
@@ -12,7 +13,7 @@ class call(): #称呼
         config.write_yaml("call",conf)
 
     @staticmethod
-    def _a_ (msg_l:dict,an) -> str:
+    def _a_ (msg_l:dict,an):
         wxid=msg_l["wxid"]
         wxid_group=msg_l["wxid_group"]
 
@@ -34,7 +35,6 @@ class call(): #称呼
                     anr=an.replace('_a_',nickName)
                 #        print('无')
                 return anr
-
         return an
     @staticmethod
     def name_write(msg_l):
@@ -57,10 +57,10 @@ class call(): #称呼
         return data_json
 
 
-# if __name__ =="__main__":
-#     plugins_sql.inf("call",0.01,"zwx08","称呼")
-#     qu_key.admin.write("call","&call",1,'{plugin}.call.name_write',1,"称呼写入")
-#     qu_key.write("read_name_all","&c_all",0,"{plugin}.call.read_name_all",1,"所有称呼读取")
-#     an_replace.write("call","_a_",1,"{plugin}.call._a_",1,"称呼替换")
-#     config.first("call","""#wxid_: 称呼
-# wxid_2eokvnwm9a5a22: 主人""")
+if __name__ =="__main__":
+    plugins_sql.inf("call",0.01,"zwx08","称呼")
+    qu_key.admin.write("call","&call",1,'{plugin}.call.name_write',1,"称呼写入")
+    qu_key.write("read_name_all","&c_all",0,"{plugin}.call.read_name_all",1,"所有称呼读取")
+    an_replace.write("call","_a_",1,"{plugin}.call._a_",1,"称呼替换")
+    config.first("call","""#wxid_: 称呼
+wxid_2eokvnwm9a5a22: 主人""")

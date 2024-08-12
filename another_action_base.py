@@ -8,12 +8,15 @@ def nickname(wxid_group):
     nickname=wxid_de.data.nickName
     return nickname
 
-def get_roomNick_in_chatroom(chatroom,nickname):
+def get_roomNick_in_chatroom(chatroom,userName):
     apiget=get_chatroom_member(chatroom)
     for member in apiget.data.member:
         # 检查当前成员的userName是否为我们要查找的userName
-        if member.userName == nickname:
+        if member.userName == userName:
             # 找到匹配项，返回其nickName
-            return member.nickName
+            if member.roomNick != '':
+                return member.roomNick
+            else:
+                return member.nickName
     # 没有找到匹配的userName，返回None
     return None

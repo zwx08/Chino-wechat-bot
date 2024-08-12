@@ -10,7 +10,6 @@ import sqlite3 as sqlite
 def sql():
     wx_db_file=os.path.join(os.path.dirname(__file__),"wx.db")
     con = sqlite.connect(wx_db_file,check_same_thread=False)
-    logging.debug("SQL connect")
     return con
 def dict_factory(cursor, row):
     d = {}

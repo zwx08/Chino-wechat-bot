@@ -17,7 +17,6 @@ API_URL = agreement + language + organization
 
 program = os.path.basename(sys.argv[0])
 logger = logging.getLogger(program)
-logging.basicConfig(format='%(asctime)s: %(levelname)s: %(message)s')
 
 
 def pageid(title = None, np = 0):
