@@ -5,8 +5,6 @@ import logging
 
 
 from logging.handlers import RotatingFileHandler
-import os
-
 
 # logger = logging.getLogger("Chino_old")
 

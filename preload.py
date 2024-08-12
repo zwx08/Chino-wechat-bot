@@ -1,6 +1,6 @@
 import json
 import os
-from .file_action import data_read, data_write
+from .file_action import data_read
 from .api_action import get_bot_details
 import ujson
 from typing import List, Dict, Optional

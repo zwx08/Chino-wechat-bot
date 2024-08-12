@@ -5,7 +5,6 @@ from pluginlib import PluginLoader
 import pluginlib
 
 from Chino_old.model_definition import AnswerBase, AnswerBaseList
-from . import action_sql
 #from another_action import _a_ , image, name_write,data_name_write,read_name_all,warn,w_all
 from  . import api_action as api
 from .another_action_base import get_roomNick_in_chatroom
@@ -14,7 +13,6 @@ import schedule
 from file_action import config_read
 from .file_action import data_read
 from .preload import preload
-from .load_plugins import run_case as load_plugins
 import sys
 import xmltodict
 from .standard_print import printerr,printinf,printmsg
@@ -31,7 +29,6 @@ config=config_read()
 address=config.connect.host
 port=config.connect.port
 robotname=config.robotname
-action_sql.base.check_sql()
 preload()
 # load_plugins()
 
